@@ -1,0 +1,27 @@
+¬ыбрана схема "¬ложенное множество" (Nested Set), котора€ хорошо подходит по скорости и оптимальности запросов в контексте данной задачи.
+ѕредоставлено изображение дерева категорий дл€ удобства.
+ќптимизаци€ запросов производитс€ за счет выполенни€ всех операций в один запрос без использвоани€ подзапросов.
+
+
+a. ƒл€ заданного списка товаров получить названи€ всех категорий, в которых представлены товары;
+SELECT DISTINCT name FROM category AS c
+LEFT JOIN product_to_category AS ptc on (ptc.category_id = c.id)
+WHERE ptc.product_id IN (2,9,21,32,40,51)
+
+b. ƒл€ заданной категории получить список предложений всех товаров из этой категории и ее дочерних категорий;
+SELECT DISTINCT p.* FROM category AS c
+LEFT JOIN product_to_category AS ptc ON (ptc.category_id = c.id)
+LEFT JOIN product AS p ON (ptc.product_id = p.id)
+WHERE c.lft BETWEEN 2 AND 15
+
+c. ƒл€ заданного списка категорий получить количество предложений товаров в каждой категории;
+SELECT COUNT(product_id) AS products_in_category, category_id FROM product_to_category
+WHERE category_id IN (2, 6, 10, 14, 19, 26) GROUP BY category_id
+
+
+d. ƒл€ заданного списка категорий получить общее количество уникальных предложений товара;
+SELECT COUNT(DISTINCT product_id) FROM `product_to_category` WHERE `category_id` in (1,6,17,16)
+
+
+e. ƒл€ заданной категории получить ее полный путь в дереве (breadcrumb, Ђхлебные крошкиї).
+SELECT * FROM category WHERE lft < 5 AND rgt > 6 ORDER BY lft ASC
